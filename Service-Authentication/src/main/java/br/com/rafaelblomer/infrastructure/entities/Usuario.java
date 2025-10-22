@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
-public abstract class Usuario implements UserDetails {
+public abstract class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,21 +23,6 @@ public abstract class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private RoleUsuario role;
-
-    @Override
-    public Collection<SimpleGrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return senha;
-    }
 
     public String getEmail() {
         return email;

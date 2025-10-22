@@ -34,26 +34,6 @@ public class SecurityConfig {
     private RSAPrivateKey privateKey;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**", // endpoints públicos
-                                "/cadastro",
-                                "/login",
-                                "/verificaremail",
-                                "/esquecisenha",
-                                "/alterarsenha"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-
-        return http.build();
-    }
-
-    @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
