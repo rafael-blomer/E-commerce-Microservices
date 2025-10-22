@@ -28,11 +28,11 @@ public class JwtService {
                 .collect(Collectors.joining(" "));
 
         var claims = JwtClaimsSet.builder()
-                .issuer("usuario-service")
+                .issuer("ecommerce-service")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
-                .claim("scope", scopes)
+                .claim("scope", scopes) // <-- roles vão aqui
                 .build();
 
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -41,5 +41,10 @@ public class JwtService {
     public String extrairEmailToken(String token) {
         Jwt jwt = decoder.decode(token);
         return jwt.getSubject();
+    }
+
+    public String extrairRoleToken(String token) {
+        Jwt jwt = decoder.decode(token);
+        return (String) jwt.getClaims().get("scope");
     }
 }
