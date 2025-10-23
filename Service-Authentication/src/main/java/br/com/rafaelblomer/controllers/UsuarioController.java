@@ -30,11 +30,6 @@ public class UsuarioController {
 
     @GetMapping("/buscarusuario")
     public ResponseEntity<UsuarioDefaultResponseDTO> buscarUsuarioToken(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorTokenJWT(token));
-    }
-
-    @PatchMapping("/desativarusuario")
-    public ResponseEntity<Void> desativarUsuario(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok().body(usuarioService.desativarUsuario(token));
+        return ResponseEntity.ok().body(usuarioService.buscarUsuarioDTOPorTokenJWT(token));
     }
 }

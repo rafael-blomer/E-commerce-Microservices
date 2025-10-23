@@ -24,6 +24,16 @@ public abstract class Usuario {
     @Enumerated(EnumType.STRING)
     private RoleUsuario role;
 
+    public Usuario(String email, String nome, RoleUsuario role, String senha) {
+        this.email = email;
+        this.nome = nome;
+        this.role = role;
+        this.senha = senha;
+    }
+
+    public Usuario() {
+    }
+
     public String getEmail() {
         return email;
     }

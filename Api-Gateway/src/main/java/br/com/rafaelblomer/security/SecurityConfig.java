@@ -16,7 +16,11 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         // rotas públicas
-                        .pathMatchers("/criarvendedor", "/login", "/criarcomprador").permitAll()
+                        .pathMatchers(
+                                "/service-authentication/criarvendedor",
+                                "/service-authentication/login",
+                                "/service-authentication/criarcomprador"
+                        ).permitAll()
                         // tudo o resto exige autenticação
                         .anyExchange().authenticated()
                 )

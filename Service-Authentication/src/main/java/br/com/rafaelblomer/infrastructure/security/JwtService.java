@@ -3,6 +3,9 @@ package br.com.rafaelblomer.infrastructure.security;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
+import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
+import br.com.rafaelblomer.infrastructure.entities.Usuario;
+import br.com.rafaelblomer.infrastructure.repositories.UsuarioRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
@@ -13,10 +16,12 @@ public class JwtService {
 
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
+    private final UsuarioRepository usuarioRepository;
 
-    public JwtService(JwtEncoder encoder, JwtDecoder decoder) {
+    public JwtService(JwtEncoder encoder, JwtDecoder decoder, UsuarioRepository usuarioRepository) {
         this.encoder = encoder;
         this.decoder = decoder;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public String generateToken(Authentication authentication) {
@@ -46,5 +51,12 @@ public class JwtService {
     public String extrairRoleToken(String token) {
         Jwt jwt = decoder.decode(token);
         return (String) jwt.getClaims().get("scope");
+    }
+
+    public Usuario extrairUsuarioToken(String token) {
+        Jwt jwt = decoder.decode(token);
+        String email = jwt.getSubject();
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ObjetoNaoEncontradoException("Usuário não encontrado: " + email));
     }
 }

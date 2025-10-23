@@ -1,4 +1,5 @@
 package br.com.rafaelblomer.business.dtos;
 
-public record UsuarioDefaultResponseDTO() {
+public sealed interface UsuarioDefaultResponseDTO
+        permits UsuarioVendedorResponseDTO, UsuarioCompradorResponseDTO {
 }
