@@ -2,6 +2,7 @@ package br.com.rafaelblomer.controllers.exceptions;
 
 import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +27,22 @@ public class ResourceExceptionHandler {
                 .reduce((msg1, msg2) -> msg1 + "; " + msg2)
                 .orElse("Erro de validação");
         StandardError err = new StandardError(System.currentTimeMillis(), status.value(), "Erro de validação nos campos.", mensagens, request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> pegarDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String mensagem = "Violação de integridade de dados.";
+        String causeMessage = e.getMostSpecificCause().getMessage().toLowerCase();
+        if (causeMessage.contains("cnpj"))
+            mensagem = "Já existe um usuário com esse CNPJ.";
+        else if (causeMessage.contains("email"))
+            mensagem = "Já existe um usuário com esse e-mail.";
+        else if (causeMessage.contains("cpf"))
+            mensagem = "Já existe um usuário com esse CPF.";
+        StandardError err = new StandardError(System.currentTimeMillis(), status.value(), "Erro de integridade de dados.", mensagem, request.getRequestURI()
         );
         return ResponseEntity.status(status).body(err);
     }

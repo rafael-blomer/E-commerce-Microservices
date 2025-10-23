@@ -2,11 +2,9 @@ package br.com.rafaelblomer.business;
 
 import br.com.rafaelblomer.business.converters.UsuarioConverter;
 import br.com.rafaelblomer.business.dtos.*;
-import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
 import br.com.rafaelblomer.infrastructure.entities.Comprador;
 import br.com.rafaelblomer.infrastructure.entities.Usuario;
 import br.com.rafaelblomer.infrastructure.entities.Vendedor;
-import br.com.rafaelblomer.infrastructure.entities.enums.RoleUsuario;
 import br.com.rafaelblomer.infrastructure.repositories.UsuarioRepository;
 import br.com.rafaelblomer.infrastructure.security.JwtService;
 import jakarta.validation.Valid;
@@ -57,7 +55,6 @@ public class UsuarioService {
         return "Bearer " + jwtToken;
     }
 
-
     public UsuarioDefaultResponseDTO buscarUsuarioDTOPorTokenJWT(String token) {
         Usuario usuario = buscarUsuarioEntidadePorToken(token);
         if (usuario instanceof Comprador comprador)
@@ -69,7 +66,6 @@ public class UsuarioService {
     }
 
     //ÚTEIS
-
 
     private Usuario buscarUsuarioEntidadePorToken(String token) {
         return jwtService.extrairUsuarioToken(token.substring(7));

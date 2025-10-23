@@ -1,6 +1,7 @@
 package br.com.rafaelblomer.infrastructure.entities;
 
 import br.com.rafaelblomer.infrastructure.entities.enums.RoleUsuario;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -11,8 +12,8 @@ import java.util.List;
 @DiscriminatorValue("VENDEDOR")
 public class Vendedor extends Usuario{
 
+    @Column(unique = true)
     private String cnpj;
-    private List<Long> idsProdutos;
 
     public Vendedor() {
     }
@@ -20,7 +21,6 @@ public class Vendedor extends Usuario{
     public Vendedor(String nome, String email, String senha, String cnpj) {
         super(email, nome, RoleUsuario.ROLE_VENDEDOR, senha);
         this.cnpj = cnpj;
-        this.idsProdutos = new ArrayList<>();
     }
 
     public String getCnpj() {
@@ -29,13 +29,5 @@ public class Vendedor extends Usuario{
 
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
-    }
-
-    public List<Long> getIdsProdutos() {
-        return idsProdutos;
-    }
-
-    public void setIdsProdutos(List<Long> idsProdutos) {
-        this.idsProdutos = idsProdutos;
     }
 }

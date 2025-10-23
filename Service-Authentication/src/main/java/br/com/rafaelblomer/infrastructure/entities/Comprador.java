@@ -1,6 +1,7 @@
 package br.com.rafaelblomer.infrastructure.entities;
 
 import br.com.rafaelblomer.infrastructure.entities.enums.RoleUsuario;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("COMPRADOR")
 public class Comprador extends Usuario{
 
+    @Column(unique = true)
     private String cpf;
     private String enderecoEntrega;
 

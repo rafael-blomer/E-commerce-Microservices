@@ -31,8 +31,7 @@ public class UsuarioConverter {
                 vendedorEntity.getNome(),
                 vendedorEntity.getEmail(),
                 vendedorEntity.getRole(),
-                vendedorEntity.getCnpj(),
-                vendedorEntity.getIdsProdutos());
+                vendedorEntity.getCnpj());
     }
 
     public UsuarioCompradorResponseDTO paraCompradorResponseDTO(Comprador compradorEntity) {
