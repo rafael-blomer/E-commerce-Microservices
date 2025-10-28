@@ -2,7 +2,8 @@ package br.com.rafaelblomer.business.dtos;
 
 import br.com.rafaelblomer.infrastructure.entities.enums.RoleUsuario;
 
-public record UsuarioCompradorResponseDTO(String nome,
+public record UsuarioCompradorResponseDTO(Long id,
+                                          String nome,
                                           String email,
                                           RoleUsuario tipoUsuario,
                                           String cpf,

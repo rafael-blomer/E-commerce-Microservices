@@ -8,10 +8,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProdutoConverter {
-    public Produto paraProdutoEntidade(@Valid ProdutoCadastroDTO cadastroDTO) {
-        return new Produto();
+    public Produto paraProdutoEntidade(@Valid ProdutoCadastroDTO cadastroDTO, Long idUsuario) {
+        return new Produto(
+                cadastroDTO.nome(),
+                cadastroDTO.descricao(),
+                cadastroDTO.preco(),
+                cadastroDTO.quantidadeTotal(),
+                idUsuario);
     }
 
-    public ProdutoResponseDTO paraProdutoResponseDTO(br.com.rafaelblomer.infrastructure.entities.Produto produto) {
+    public ProdutoResponseDTO paraProdutoResponseDTO(Produto produto) {
+        return new ProdutoResponseDTO(produto.getNome(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getQuantidadeTotal(),
+                produto.getIdUsuario());
     }
 }

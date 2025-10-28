@@ -1,6 +1,5 @@
 package br.com.rafaelblomer.infrastructure.entities;
 
-import br.com.rafaelblomer.infrastructure.entities.enums.StatusProduto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,16 +14,13 @@ public class Produto {
     private String nome;
     private String descricao;
     private Double preco;
-    private StatusProduto status;
     private Integer quantidadeTotal;
     private Long idUsuario;
 
-    public Produto(Long id, String nome, String descricao, Double preco, Integer quantidadeTotal, Long idUsuario) {
-        this.id = id;
+    public Produto(String nome, String descricao, Double preco, Integer quantidadeTotal, Long idUsuario) {
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
-        this.status = StatusProduto.DISPONIVEL;
         this.quantidadeTotal = quantidadeTotal;
         this.idUsuario = idUsuario;
     }
@@ -62,14 +58,6 @@ public class Produto {
 
     public void setPreco(Double preco) {
         this.preco = preco;
-    }
-
-    public StatusProduto getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusProduto status) {
-        this.status = status;
     }
 
     public Integer getQuantidadeTotal() {

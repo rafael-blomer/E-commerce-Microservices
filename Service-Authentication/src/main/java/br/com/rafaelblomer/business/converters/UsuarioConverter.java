@@ -28,6 +28,7 @@ public class UsuarioConverter {
 
     public UsuarioVendedorResponseDTO paraVendedorResponseDTO(Vendedor vendedorEntity) {
         return new UsuarioVendedorResponseDTO(
+                vendedorEntity.getId(),
                 vendedorEntity.getNome(),
                 vendedorEntity.getEmail(),
                 vendedorEntity.getRole(),
@@ -36,6 +37,7 @@ public class UsuarioConverter {
 
     public UsuarioCompradorResponseDTO paraCompradorResponseDTO(Comprador compradorEntity) {
         return new UsuarioCompradorResponseDTO(
+                compradorEntity.getId(),
                 compradorEntity.getNome(),
                 compradorEntity.getEmail(),
                 compradorEntity.getRole(),

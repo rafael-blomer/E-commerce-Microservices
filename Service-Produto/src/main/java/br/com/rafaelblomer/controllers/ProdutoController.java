@@ -2,14 +2,14 @@ package br.com.rafaelblomer.controllers;
 
 import br.com.rafaelblomer.business.ProdutoService;
 import br.com.rafaelblomer.business.dtos.ProdutoCadastroDTO;
+import br.com.rafaelblomer.business.dtos.ProdutoMovimentacaoEstoqueDTO;
 import br.com.rafaelblomer.business.dtos.ProdutoResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProdutoController {
@@ -21,4 +21,17 @@ public class ProdutoController {
     ResponseEntity<ProdutoResponseDTO> criarNovoProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoCadastroDTO cadastroDTO) {
         return ResponseEntity.ok().body(produtoService.criarNovoProduto(token, cadastroDTO));
     }
+
+    @PatchMapping("/adicionarproduto")
+    ResponseEntity<ProdutoResponseDTO> adicionarQuantidadeDeProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoMovimentacaoEstoqueDTO movimentacaoEstoqueDTO) {
+        return ResponseEntity.ok().body(produtoService.adicionarQuantidadeDeProduto(token, movimentacaoEstoqueDTO));
+    }
+
+    @PatchMapping("/retirarproduto")
+    ResponseEntity<ProdutoResponseDTO> retirarQuantidadeDeProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoMovimentacaoEstoqueDTO movimentacaoEstoqueDTO) {
+        return ResponseEntity.ok().body(produtoService.retirarQuantidadeDeProduto(token, movimentacaoEstoqueDTO));
+    }
+
+    @GetMapping("/buscarprodutos")
+    ResponseEntity<List<ProdutoResponseDTO>> buscarTodosProdutos()
 }

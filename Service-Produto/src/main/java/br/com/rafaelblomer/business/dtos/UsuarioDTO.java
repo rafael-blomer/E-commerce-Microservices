@@ -1,4 +1,7 @@
 package br.com.rafaelblomer.business.dtos;
 
-public record UsuarioDTO() {
+public record UsuarioDTO(Long id,
+                         String nome,
+                         String email,
+                         String cnpj) {
 }
