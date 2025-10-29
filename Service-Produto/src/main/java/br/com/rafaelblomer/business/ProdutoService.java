@@ -14,7 +14,11 @@ import br.com.rafaelblomer.infrastructure.repositories.ProdutoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProdutoService {
@@ -71,4 +75,8 @@ public class ProdutoService {
         if(quantidadeTotal < quantidadeParaRetirar)
             throw new RetiradaProdutoIlegalException("Existem menos produtos disponíveis do que a quantidade desejada");
     }
+
+    public Page<ProdutoResponseDTO> buscarTodosProdutos(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(produtoConverter::paraProdutoResponseDTO);    }
 }

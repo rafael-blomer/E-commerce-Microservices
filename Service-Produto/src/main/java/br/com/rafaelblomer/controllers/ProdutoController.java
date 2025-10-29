@@ -6,10 +6,10 @@ import br.com.rafaelblomer.business.dtos.ProdutoMovimentacaoEstoqueDTO;
 import br.com.rafaelblomer.business.dtos.ProdutoResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class ProdutoController {
@@ -33,5 +33,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/buscarprodutos")
-    ResponseEntity<List<ProdutoResponseDTO>> buscarTodosProdutos()
+    ResponseEntity<Page<ProdutoResponseDTO>> buscarTodosProdutos(Pageable pageable) {
+        return ResponseEntity.ok().body(produtoService.buscarTodosProdutos(pageable));
+    }
 }
