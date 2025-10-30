@@ -1,4 +1,4 @@
-package br.com.rafaelblomer.infrastructure.entities.client;
+package br.com.rafaelblomer.infrastructure.client;
 
 import br.com.rafaelblomer.business.dtos.UsuarioDTO;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -9,16 +9,13 @@ import br.com.rafaelblomer.business.exceptions.AcaoNaoPermitidaException;
 import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
 import br.com.rafaelblomer.business.exceptions.RetiradaProdutoIlegalException;
 import br.com.rafaelblomer.infrastructure.entities.Produto;
-import br.com.rafaelblomer.infrastructure.entities.client.UsuarioClient;
+import br.com.rafaelblomer.infrastructure.client.UsuarioClient;
 import br.com.rafaelblomer.infrastructure.repositories.ProdutoRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProdutoService {
@@ -47,6 +44,7 @@ public class ProdutoService {
         return produtoConverter.paraProdutoResponseDTO(produto);
     }
 
+    //RabbitMQ
     public ProdutoResponseDTO retirarQuantidadeDeProduto(String token, ProdutoMovimentacaoEstoqueDTO movimentacaoDTO) {
         UsuarioDTO usuario = buscarUsuarioPorToken(token);
         Produto produto = buscarProdutoPorId(movimentacaoDTO.idProduto());
@@ -54,6 +52,10 @@ public class ProdutoService {
         verificarRetiradaQuantidadeDisponivel(produto.getQuantidadeTotal(), movimentacaoDTO.quantidade());
         produto.setQuantidadeTotal(produto.getQuantidadeTotal() - movimentacaoDTO.quantidade());
         return produtoConverter.paraProdutoResponseDTO(produto);
+    }
+
+    public ProdutoResponseDTO buscarUmProdutoPorId(Long id) {
+        return produtoConverter.paraProdutoResponseDTO(buscarProdutoPorId(id));
     }
 
     //ÚTEIS
@@ -78,5 +80,6 @@ public class ProdutoService {
 
     public Page<ProdutoResponseDTO> buscarTodosProdutos(Pageable pageable) {
         return repository.findAll(pageable)
-                .map(produtoConverter::paraProdutoResponseDTO);    }
+                .map(produtoConverter::paraProdutoResponseDTO);
+    }
 }

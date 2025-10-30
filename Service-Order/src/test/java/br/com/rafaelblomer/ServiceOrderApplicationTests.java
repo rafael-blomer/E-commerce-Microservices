@@ -1,4 +1,4 @@
-package br.com.rafaelblomer.Service_Order;
+package br.com.rafaelblomer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

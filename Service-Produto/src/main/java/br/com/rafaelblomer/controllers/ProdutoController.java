@@ -27,13 +27,13 @@ public class ProdutoController {
         return ResponseEntity.ok().body(produtoService.adicionarQuantidadeDeProduto(token, movimentacaoEstoqueDTO));
     }
 
-    @PatchMapping("/retirarproduto")
-    ResponseEntity<ProdutoResponseDTO> retirarQuantidadeDeProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoMovimentacaoEstoqueDTO movimentacaoEstoqueDTO) {
-        return ResponseEntity.ok().body(produtoService.retirarQuantidadeDeProduto(token, movimentacaoEstoqueDTO));
-    }
-
     @GetMapping("/buscarprodutos")
     ResponseEntity<Page<ProdutoResponseDTO>> buscarTodosProdutos(Pageable pageable) {
         return ResponseEntity.ok().body(produtoService.buscarTodosProdutos(pageable));
+    }
+
+    @GetMapping("/buscarporid/{id}")
+    ResponseEntity<ProdutoResponseDTO> buscarUmProduto(@PathVariable Long id) {
+        return ResponseEntity.ok().body(produtoService.buscarUmProdutoPorId(id));
     }
 }
