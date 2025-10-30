@@ -18,7 +18,9 @@ public class ProdutoConverter {
     }
 
     public ProdutoResponseDTO paraProdutoResponseDTO(Produto produto) {
-        return new ProdutoResponseDTO(produto.getNome(),
+        return new ProdutoResponseDTO(
+                produto.getId(),
+                produto.getNome(),
                 produto.getDescricao(),
                 produto.getPreco(),
                 produto.getQuantidadeTotal(),

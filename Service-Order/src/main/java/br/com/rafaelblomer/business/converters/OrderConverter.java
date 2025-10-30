@@ -8,6 +8,8 @@ import br.com.rafaelblomer.infrastructure.entities.Order;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class OrderConverter {
 
@@ -15,6 +17,12 @@ public class OrderConverter {
     }
 
     public Order paraOrderEntidade(@Valid OrderRequestDTO orderDTO, UsuarioDTO usuario, ProdutoDTO produto) {
-        return null;
+        return Order.builder()
+                .dataCompra(LocalDateTime.now())
+                .idComprador(usuario.id())
+                .idVendedor(produto.idUsuario())
+                .idProduto(produto.id())
+                .quantidadeComprada(orderDTO.quantidadeComprada())
+                .build();
     }
 }

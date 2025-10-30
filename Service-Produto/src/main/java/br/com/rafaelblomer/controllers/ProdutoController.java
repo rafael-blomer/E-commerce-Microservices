@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,11 +18,13 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
+    @PreAuthorize("hasAuthority('ROLE_VENDEDOR')")
     @PostMapping("/criarproduto")
     ResponseEntity<ProdutoResponseDTO> criarNovoProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoCadastroDTO cadastroDTO) {
         return ResponseEntity.ok().body(produtoService.criarNovoProduto(token, cadastroDTO));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_VENDEDOR')")
     @PatchMapping("/adicionarproduto")
     ResponseEntity<ProdutoResponseDTO> adicionarQuantidadeDeProduto(@RequestHeader("Authorization") String token, @Valid @RequestBody ProdutoMovimentacaoEstoqueDTO movimentacaoEstoqueDTO) {
         return ResponseEntity.ok().body(produtoService.adicionarQuantidadeDeProduto(token, movimentacaoEstoqueDTO));

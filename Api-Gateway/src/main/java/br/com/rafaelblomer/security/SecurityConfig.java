@@ -24,7 +24,6 @@ public class SecurityConfig {
                         // tudo o resto exige autenticação
                         .anyExchange().authenticated()
                 )
-                // ✅ nova forma recomendada a partir do Spring Security 6.1
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
 
         return http.build();

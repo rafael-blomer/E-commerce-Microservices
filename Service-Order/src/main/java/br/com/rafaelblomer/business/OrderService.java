@@ -29,10 +29,21 @@ public class OrderService {
     private ProdutoClient produtoClient;
 
     public OrderResponseDTO criarNovaOrdem(String token, @Valid OrderRequestDTO orderDTO) {
-        UsuarioDTO usuario = usuarioClient.buscarUsuarioToken(token).getBody();
-        ProdutoDTO produto = produtoClient.buscarUmProduto(orderDTO.idProduto()).getBody();
+        UsuarioDTO usuario = buscarUsuarioToken(token);
+        ProdutoDTO produto = buscarProdutoId(orderDTO.idProduto());
         Order order = converter.paraOrderEntidade(orderDTO, usuario, produto);
         repository.save(order);
         return converter.paraOrderResponseDTO(order);
+    }
+
+    //Úteis
+
+    private UsuarioDTO buscarUsuarioToken(String token) {
+        return usuarioClient.buscarUsuarioToken(token).getBody();
+    }
+
+
+    private ProdutoDTO buscarProdutoId(Long idProduto) {
+        return produtoClient.buscarUmProduto(idProduto).getBody();
     }
 }

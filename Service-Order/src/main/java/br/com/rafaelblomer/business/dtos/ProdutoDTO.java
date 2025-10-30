@@ -1,7 +1,8 @@
 package br.com.rafaelblomer.business.dtos;
 
 
-public record ProdutoDTO(String nome,
+public record ProdutoDTO(Long id,
+                         String nome,
                          String descricao,
                          Double preco,
                          Integer quantidadeDisponivel,
