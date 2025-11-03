@@ -2,6 +2,7 @@ package br.com.rafaelblomer.business;
 
 import br.com.rafaelblomer.business.converters.UsuarioConverter;
 import br.com.rafaelblomer.business.dtos.*;
+import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
 import br.com.rafaelblomer.infrastructure.entities.Comprador;
 import br.com.rafaelblomer.infrastructure.entities.Usuario;
 import br.com.rafaelblomer.infrastructure.entities.Vendedor;
@@ -65,9 +66,19 @@ public class UsuarioService {
             throw new IllegalArgumentException("Tipo de usuário desconhecido");
     }
 
+    public UsuarioVendedorResponseDTO buscarUsuarioDTOPorID(Long id) {
+        Vendedor vendedor = (Vendedor) buscarUsuarioPorId(id);
+        return converter.paraVendedorResponseDTO(vendedor);
+    }
+
     //ÚTEIS
 
     private Usuario buscarUsuarioEntidadePorToken(String token) {
         return jwtService.extrairUsuarioToken(token.substring(7));
     }
+
+    private Usuario buscarUsuarioPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ObjetoNaoEncontradoException("Usuário não foi encontrado."));
+    }
+
 }

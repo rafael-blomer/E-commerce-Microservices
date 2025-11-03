@@ -32,4 +32,9 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDefaultResponseDTO> buscarUsuarioToken(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok().body(usuarioService.buscarUsuarioDTOPorTokenJWT(token));
     }
+
+    @GetMapping("/buscarporid/{id}")
+    public ResponseEntity<UsuarioDefaultResponseDTO> buscarUsuarioId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(usuarioService.buscarUsuarioDTOPorID(id));
+    }
 }

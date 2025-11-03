@@ -1,13 +1,9 @@
 package br.com.rafaelblomer.business;
 
 import br.com.rafaelblomer.business.converters.ProdutoConverter;
-import br.com.rafaelblomer.business.dtos.ProdutoCadastroDTO;
-import br.com.rafaelblomer.business.dtos.ProdutoMovimentacaoEstoqueDTO;
-import br.com.rafaelblomer.business.dtos.ProdutoResponseDTO;
-import br.com.rafaelblomer.business.dtos.UsuarioDTO;
+import br.com.rafaelblomer.business.dtos.*;
 import br.com.rafaelblomer.business.exceptions.AcaoNaoPermitidaException;
 import br.com.rafaelblomer.business.exceptions.ObjetoNaoEncontradoException;
-import br.com.rafaelblomer.business.exceptions.RetiradaProdutoIlegalException;
 import br.com.rafaelblomer.infrastructure.entities.Produto;
 import br.com.rafaelblomer.infrastructure.client.UsuarioClient;
 import br.com.rafaelblomer.infrastructure.repositories.ProdutoRepository;
@@ -41,17 +37,15 @@ public class ProdutoService {
         Produto produto = buscarProdutoPorId(movimentacaoDTO.idProduto());
         verificarProdutoUsuario(produto, usuario);
         produto.setQuantidadeTotal(produto.getQuantidadeTotal() + movimentacaoDTO.quantidade());
+        repository.save(produto);
         return produtoConverter.paraProdutoResponseDTO(produto);
     }
 
     //RabbitMQ
-    public ProdutoResponseDTO retirarQuantidadeDeProduto(String token, ProdutoMovimentacaoEstoqueDTO movimentacaoDTO) {
-        UsuarioDTO usuario = buscarUsuarioPorToken(token);
+    public void retirarQuantidadeDeProduto(ProdutoMovimentacaoRetiradaDTO movimentacaoDTO) {
         Produto produto = buscarProdutoPorId(movimentacaoDTO.idProduto());
-        verificarProdutoUsuario(produto, usuario);
-        verificarRetiradaQuantidadeDisponivel(produto.getQuantidadeTotal(), movimentacaoDTO.quantidade());
-        produto.setQuantidadeTotal(produto.getQuantidadeTotal() - movimentacaoDTO.quantidade());
-        return produtoConverter.paraProdutoResponseDTO(produto);
+        produto.setQuantidadeTotal(produto.getQuantidadeTotal() - movimentacaoDTO.quantidadeComprada());
+        repository.save(produto);
     }
 
     public ProdutoResponseDTO buscarUmProdutoPorId(Long id) {
@@ -71,11 +65,6 @@ public class ProdutoService {
 
     private Produto buscarProdutoPorId(Long id) {
         return repository.findById(id).orElseThrow(() -> new ObjetoNaoEncontradoException("O produto não foi encontrado"));
-    }
-
-    private void verificarRetiradaQuantidadeDisponivel(Integer quantidadeTotal, Integer quantidadeParaRetirar) {
-        if(quantidadeTotal < quantidadeParaRetirar)
-            throw new RetiradaProdutoIlegalException("Existem menos produtos disponíveis do que a quantidade desejada");
     }
 
     public Page<ProdutoResponseDTO> buscarTodosProdutos(Pageable pageable) {

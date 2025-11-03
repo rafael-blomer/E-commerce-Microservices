@@ -1,5 +1,6 @@
 package br.com.rafaelblomer.controller.exceptions;
 
+import br.com.rafaelblomer.business.exceptions.RetiradaProdutoIlegalException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,13 @@ public class ResourceExceptionHandler {
         StandardError err = new StandardError(System.currentTimeMillis(), status.value(), "Usuário não tem permissão para realizar essa ação.", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }*/
+
+    @ExceptionHandler(RetiradaProdutoIlegalException.class)
+    public ResponseEntity<StandardError> IlegalRetiradaException(RetiradaProdutoIlegalException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError(System.currentTimeMillis(), status.value(), "Retirada de produtos ilegal.", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> pegarValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {

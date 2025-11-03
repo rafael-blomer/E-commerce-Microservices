@@ -41,7 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/criarvendedor",
                                 "/login",
-                                "/criarcomprador"
+                                "/criarcomprador",
+                                "/buscarporid/*"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

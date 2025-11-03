@@ -15,16 +15,14 @@ public class SecurityConfig {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        // rotas públicas
                         .pathMatchers(
                                 "/service-authentication/criarvendedor",
                                 "/service-authentication/login",
-                                "/service-authentication/criarcomprador"
+                                "/service-authentication/criarcomprador",
+                                "/service-authentication/buscarporid/**"
                         ).permitAll()
-                        // tudo o resto exige autenticação
-                        .anyExchange().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
+                        .anyExchange().permitAll() // 👈 deixa o gateway só rotear
+                );
 
         return http.build();
     }

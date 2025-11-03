@@ -1,10 +1,9 @@
 package br.com.rafaelblomer.business;
 
 import br.com.rafaelblomer.business.converters.OrderConverter;
-import br.com.rafaelblomer.business.dtos.OrderRequestDTO;
-import br.com.rafaelblomer.business.dtos.OrderResponseDTO;
-import br.com.rafaelblomer.business.dtos.ProdutoDTO;
-import br.com.rafaelblomer.business.dtos.UsuarioDTO;
+import br.com.rafaelblomer.business.dtos.*;
+import br.com.rafaelblomer.business.exceptions.RetiradaProdutoIlegalException;
+import br.com.rafaelblomer.business.producers.OrderProducer;
 import br.com.rafaelblomer.infrastructure.client.ProdutoClient;
 import br.com.rafaelblomer.infrastructure.client.UsuarioClient;
 import br.com.rafaelblomer.infrastructure.entities.Order;
@@ -28,22 +27,35 @@ public class OrderService {
     @Autowired
     private ProdutoClient produtoClient;
 
+    @Autowired
+    private OrderProducer orderProducer;
+
     public OrderResponseDTO criarNovaOrdem(String token, @Valid OrderRequestDTO orderDTO) {
-        UsuarioDTO usuario = buscarUsuarioToken(token);
-        ProdutoDTO produto = buscarProdutoId(orderDTO.idProduto());
-        Order order = converter.paraOrderEntidade(orderDTO, usuario, produto);
+        UsuarioDTO comprador = buscarUsuarioToken(token);
+        ProdutoDTO produto = buscarProdutoId(token, orderDTO.idProduto());
+        UsuarioDTO vendedor = usuarioClient.buscarUsuarioId(produto.idUsuario()).getBody();
+        verificarQuantidadeRetirada(produto.quantidadeDisponivel(), orderDTO.quantidadeComprada());
+        Order order = converter.paraOrderEntidade(orderDTO, comprador, produto);
         repository.save(order);
-        return converter.paraOrderResponseDTO(order);
+        Double precoTotal = produto.preco() * order.getQuantidadeComprada();
+        orderProducer.publicarMensagemCompraEmail(new MessageEmailCompraDTO(comprador.nome(), comprador.email(), vendedor.email(), produto.nome(), order.getQuantidadeComprada(), precoTotal));
+        orderProducer.publicarMensagemEstoqueProduto(new MessageProdutoCompradoDTO(produto.id(), order.getQuantidadeComprada()));
+        return converter.paraOrderResponseDTO(order, produto, comprador);
     }
 
     //Úteis
+
+    private void verificarQuantidadeRetirada(Integer quantidadeTotalProduto, Integer quantidadeASerRetirada) {
+        if (quantidadeASerRetirada > quantidadeTotalProduto)
+            throw new RetiradaProdutoIlegalException("Existem menos produtos em estoque do que a quantidade desejada.");
+    }
 
     private UsuarioDTO buscarUsuarioToken(String token) {
         return usuarioClient.buscarUsuarioToken(token).getBody();
     }
 
 
-    private ProdutoDTO buscarProdutoId(Long idProduto) {
-        return produtoClient.buscarUmProduto(idProduto).getBody();
+    private ProdutoDTO buscarProdutoId(String token, Long idProduto) {
+        return produtoClient.buscarUmProduto(token, idProduto).getBody();
     }
 }

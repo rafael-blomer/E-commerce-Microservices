@@ -1,0 +1,125 @@
+version: "3.9"
+
+services:
+  service-discovery:
+    build: ./Service-Discovery
+    container_name: service-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - ecommerce-net
+
+  api-gateway:
+    build: ./Api-Gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-discovery
+    networks:
+      - ecommerce-net
+
+  service-authentication:
+    build: ./Service-Authentication
+    container_name: service-authentication
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-discovery
+      - db-authentication
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-authentication:5432/authentication-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: rafael123
+    networks:
+      - ecommerce-net
+
+  service-produto:
+    build: ./Service-Produto
+    container_name: service-produto
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-discovery
+      - db-produto
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-produto:5432/ProductService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: rafael123
+    networks:
+      - ecommerce-net
+
+  service-order:
+    build: ./Service-Order
+    container_name: service-order
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-discovery
+      - db-order
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-order:5432/OrderService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: rafael123
+    networks:
+      - ecommerce-net
+
+  service-notification:
+    build: ./Service-Notification
+    container_name: service-notification
+    ports:
+      - "8084:8084"
+    depends_on:
+      - service-discovery
+    networks:
+      - ecommerce-net
+
+  db-authentication:
+    image: postgres:15
+    container_name: db-authentication
+    environment:
+      POSTGRES_DB: authentication-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rafael123
+    ports:
+      - "5433:5432"
+    networks:
+      - ecommerce-net
+    volumes:
+      - db-auth-data:/var/lib/postgresql/data
+
+  db-produto:
+    image: postgres:15
+    container_name: db-produto
+    environment:
+      POSTGRES_DB: ProductService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rafael123
+    ports:
+      - "5434:5432"
+    networks:
+      - ecommerce-net
+    volumes:
+      - db-produto-data:/var/lib/postgresql/data
+
+  db-order:
+    image: postgres:15
+    container_name: db-order
+    environment:
+      POSTGRES_DB: OrderService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rafael123
+    ports:
+      - "5435:5432"
+    networks:
+      - ecommerce-net
+    volumes:
+      - db-order-data:/var/lib/postgresql/data
+
+networks:
+  ecommerce-net:
+
+volumes:
+  db-auth-data:
+  db-produto-data:
+  db-order-data:

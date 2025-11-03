@@ -13,7 +13,16 @@ import java.time.LocalDateTime;
 @Component
 public class OrderConverter {
 
-    public OrderResponseDTO paraOrderResponseDTO(Order order) {
+    public OrderResponseDTO paraOrderResponseDTO(Order order, ProdutoDTO produto, UsuarioDTO usuario) {
+        return new OrderResponseDTO(
+                order.getDataCompra(),
+                produto.nome(),
+                order.getQuantidadeComprada(),
+                produto.preco(),
+                produto.preco() * order.getQuantidadeComprada(),
+                usuario.nome(),
+                usuario.email(),
+                usuario.endereco());
     }
 
     public Order paraOrderEntidade(@Valid OrderRequestDTO orderDTO, UsuarioDTO usuario, ProdutoDTO produto) {
